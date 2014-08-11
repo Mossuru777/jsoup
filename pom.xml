@@ -11,20 +11,15 @@
   <inceptionYear>2009</inceptionYear>
   <issueManagement>
   	<system>GitHub</system>
-  	<url>http://github.com/jhy/jsoup/issues</url>
+  	<url>http://github.com/Mossuru777/jsoup/issues</url>
   </issueManagement>
   <licenses>
   	<license>
   		<name>The MIT License</name>
   		<url>http://jsoup.com/license</url>
   		<distribution>repo</distribution>
-  	</license>  
+  	</license>
   </licenses>
-  <scm>
-  	<url>http://github.com/jhy/jsoup</url>
-    <connection>scm:git:http://github.com/jhy/jsoup.git</connection>
-    <!-- <developerConnection>scm:git:git@github.com:jhy/jsoup.git</developerConnection> -->
-  </scm>
   <organization>
   	<name>Jonathan Hedley</name>
   	<url>http://jonathanhedley.com/</url>
@@ -108,6 +103,34 @@
         <artifactId>maven-resources-plugin</artifactId>
         <version>2.4</version>
       </plugin>
+      <plugin>
+          <groupId>com.github.github</groupId>
+          <artifactId>site-maven-plugin</artifactId>
+          <version>0.9</version>
+          <configuration>
+            <message>Creating Maven Repository for ${project.version}</message>
+            <merge>true</merge>
+            <includes><include>**/*</include></includes>
+            <outputDirectory>${project.build.directory}/mvn-repo</outputDirectory>
+            <repositoryName>jsoup</repositoryName>
+            <repositoryOwner>Mossuru777</repositoryOwner>
+          </configuration>
+          <executions>
+            <execution>
+              <goals>
+                <goal>site</goal>
+              </goals>
+              <phase>site</phase>
+            </execution>
+          </executions>
+      </plugin>
+      <plugin>
+        <artifactId>maven-deploy-plugin</artifactId>
+        <version>2.7</version>
+        <configuration>
+          <altDeploymentRepository>internal.repo::default::file://${project.build.directory}/mvn-repo</altDeploymentRepository>
+        </configuration>
+      </plugin>
     </plugins>
     <resources>
       <resource>
@@ -120,16 +143,6 @@
   </build>
 
   <distributionManagement>
-    <snapshotRepository>
-      <id>sonatype-nexus-snapshots</id>
-      <name>Sonatype Nexus Snapshots</name>
-      <url>http://oss.sonatype.org/content/repositories/snapshots</url>
-    </snapshotRepository>
-    <repository>
-      <id>sonatype-nexus-staging</id>
-      <name>Nexus Release Repository</name>
-      <url>http://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-    </repository>
   </distributionManagement>
 
   <profiles>
@@ -160,7 +173,7 @@
       </build>
     </profile>
   </profiles>
- 
+
   <dependencies>
 
     <dependency>
@@ -171,8 +184,14 @@
       <scope>test</scope>
     </dependency>
 
+	<dependency>
+		<groupId>com.github.github</groupId>
+		<artifactId>site-maven-plugin</artifactId>
+		<version>0.9</version>
+	</dependency>
+
   </dependencies>
-    
+
   <dependencyManagement>
   	<dependencies>
   	</dependencies>
@@ -180,6 +199,7 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <github.global.server>github</github.global.server>
   </properties>
 
   <developers>
